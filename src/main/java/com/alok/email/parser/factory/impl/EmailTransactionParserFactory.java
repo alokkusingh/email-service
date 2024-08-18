@@ -7,7 +7,7 @@ import lombok.Getter;
 public class EmailTransactionParserFactory implements EmailParserFactory {
 
     @Getter
-    private static EmailStatementParserFactory instance = new EmailStatementParserFactory();
+    private static EmailTransactionParserFactory instance = new EmailTransactionParserFactory();
 
     @Override
     public TransactionParser getParser() {
