@@ -36,9 +36,12 @@ public class ParserFactoryUtils {
                 return EmailType.TRANSACTION;
             }
 
+            if (emailId.equalsIgnoreCase("alerts@axisbank.com")) {
+                return EmailType.TRANSACTION;
+            }
+
             return EmailType.UNKNOWN;
         }
 
     }
-
 }
