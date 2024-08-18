@@ -3,16 +3,10 @@ package com.alok.email.parser;
 import com.alok.email.enums.EmailTransactionType;
 import com.alok.email.parser.retriver.amount.*;
 import com.alok.email.parser.retriver.amount.impl.*;
-import com.alok.email.parser.retriver.remarks.impl.AxisCCRemarksRetriever;
-import com.alok.email.parser.retriver.remarks.impl.HdfcCCRemarksRetriever;
+import com.alok.email.parser.retriver.remarks.impl.*;
 import com.alok.email.parser.retriver.remarks.RemarksRetriever;
-import com.alok.email.parser.retriver.remarks.impl.SbiCCRemarksRetriever;
-import com.alok.email.parser.retriver.remarks.impl.UnknownRemarksRetriever;
-import com.alok.email.parser.retriver.transactiondate.impl.AxisCCTransactionDateRetriever;
-import com.alok.email.parser.retriver.transactiondate.impl.HdfcCCTransactionDateRetriever;
-import com.alok.email.parser.retriver.transactiondate.impl.SbiCCTransactionDateRetriever;
+import com.alok.email.parser.retriver.transactiondate.impl.*;
 import com.alok.email.parser.retriver.transactiondate.TransactionDateRetriever;
-import com.alok.email.parser.retriver.transactiondate.impl.UnknownTransactionDateRetriever;
 
 public class ParserUtils {
 
@@ -43,6 +37,9 @@ public class ParserUtils {
             case HDFC_CC_TRANS -> {
                 return new HdfcCCRemarksRetriever();
             }
+            case HDFC_SB_TRANS -> {
+                return new HdfcSBRemarksRetriever();
+            }
             case SBI_CC_TRANS -> {
                 return new SbiCCRemarksRetriever();
             }
@@ -60,6 +57,9 @@ public class ParserUtils {
             case HDFC_CC_TRANS -> {
                 return new HdfcCCTransactionDateRetriever();
             }
+            case HDFC_SB_TRANS -> {
+                return new HdfcSBTransactionDateRetriever();
+            }
             case SBI_CC_TRANS -> {
                 return new SbiCCTransactionDateRetriever();
             }
@@ -76,6 +76,11 @@ public class ParserUtils {
         if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
                 && subject.equalsIgnoreCase("Alert :  Update on your HDFC Bank Credit Card")) {
             return EmailTransactionType.HDFC_CC_TRANS;
+        }
+
+        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
+                && subject.contains("You have done a UPI txn")) {
+            return EmailTransactionType.HDFC_SB_TRANS;
         }
 
         if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
