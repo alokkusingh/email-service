@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@ToString
 @Data
 public class TransactionEmail extends Email {
 
@@ -25,5 +24,19 @@ public class TransactionEmail extends Email {
         this.amount = amount;
         this.bank = bank;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionEmail{" +
+                "amount=" + amount +
+                ", bank='" + bank + '\'' +
+                ", description='" + description + '\'' +
+                ", id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", subject='" + subject + '\'' +
+                ", content='" + content + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

@@ -1,20 +1,29 @@
 package com.alok.email.parser.retriver.amount.impl;
 
 import com.alok.email.parser.retriver.amount.AmountRetriever;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class AxisCCAmountRetriever implements AmountRetriever {
+    private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR (.*) at ");
+
     @Override
     public double retrieve(String content) {
-        // Thank you for using your credit card no. XXYYYY for INR 1300 at GOOGLEPLAY on 16-08-2024 09:23:59 IST.
-        Pattern pattern = Pattern.compile("Thank you for using your credit card no. XX.... for INR (.*) at ");
-        Matcher matcher = pattern.matcher(content);
+        Matcher matcher = PATTERN.matcher(content);
 
         if (matcher.find()) {
             String substring = matcher.group(1);
-            return Double.parseDouble(substring);
+            try {
+                return Double.parseDouble(substring);
+            } catch (NumberFormatException e) {
+                // Handle the exception, log or return a default value
+                return 0.0;
+            }
+        } else {
+            log.warn("Pattern not found in the content.");
         }
 
         return 0.0;
