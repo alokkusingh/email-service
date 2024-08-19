@@ -8,6 +8,6 @@ RUN chown -R alok /opt
 RUN chown -R alok /home/alok
 USER alok
 COPY ${JAR_FILE} /opt/app.jar
-EXPOSE 8085
+EXPOSE 8081
 WORKDIR /opt
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/urandom","-jar","/opt/app.jar"]

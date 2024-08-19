@@ -1,0 +1,33 @@
+## MySQL Database
+spring:
+  datasource:
+    url: jdbc:mysql://jgte:32306/home-stack
+    username: root
+    password: password
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 1
+      maximum-pool-size:  5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        id:
+          new_generator_mappings: true
+
+auth:
+  token:
+    issuer:
+      urls:
+        google: https://dashboard.aloklive.info/home/auth/google/validate/id-token
+        home-stack-auth: https://dashboard.aloklive.info/home/auth/home/token/validat
+
+server:
+  port: 8085
