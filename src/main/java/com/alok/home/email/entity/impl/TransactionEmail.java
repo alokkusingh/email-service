@@ -24,11 +24,11 @@ public class TransactionEmail extends Email {
 
     @Builder
     public TransactionEmail(
-            String id, String email, String subject, String content, LocalDateTime timestamp,
-            double amount, String bank, String description, boolean verified, boolean accepted, String verifiedBy
+            String id, String email, String subject, LocalDateTime timestamp,
+            double amount, String bank, String description, boolean verified, String verifiedBy, boolean accepted
     ) {
 
-        super(id, email, subject, content, timestamp);
+        super(id, email, subject, timestamp);
         this.amount = amount;
         this.bank = bank;
         this.description = description;
@@ -46,7 +46,6 @@ public class TransactionEmail extends Email {
                 ", id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", subject='" + subject + '\'' +
-                ", content='" + content + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
     }

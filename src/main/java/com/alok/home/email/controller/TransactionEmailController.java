@@ -29,10 +29,10 @@ public class TransactionEmailController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateTransaction(
             @PathVariable(value = "id") String id,
-            @RequestParam(value = "accepted", defaultValue = "true") Boolean accepted
+            @RequestBody TransactionEmailDTO transactionEmailDTO
     ) {
 
-        transactionEmailService.updateTransactionVerified(id, accepted);
+        transactionEmailService.updateTransactionVerified(id, transactionEmailDTO);
         return ResponseEntity.ok().build();
     }
 }

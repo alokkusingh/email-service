@@ -13,8 +13,8 @@ public class NoContentEmail extends Email {
 
     @Builder
     public NoContentEmail(
-            String id, String email, String subject, String content, LocalDateTime timestamp
+            String id, String email, String subject, LocalDateTime timestamp
     ) {
-        super(id, email, subject, content, timestamp);
+        super(id, email, subject, timestamp);
     }
 }

@@ -1,6 +1,7 @@
 package com.alok.home.email.entity.impl;
 
 import com.alok.home.email.entity.Email;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Builder;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 @Data
 public class FailedEmail extends Email {
 
+    @Column(length = 2000)
+    private String content;
     private String error;
     private boolean processed;
     private boolean success;
@@ -24,10 +27,11 @@ public class FailedEmail extends Email {
             String id, String email, String subject, String content, LocalDateTime timestamp, String error, boolean processed, boolean success
     ) {
 
-        super(id, email, subject, content, timestamp);
+        super(id, email, subject, timestamp);
         this.error = error;
         this.processed = processed;
         this.success = success;
+        this.content = content;
     }
 
     @Override

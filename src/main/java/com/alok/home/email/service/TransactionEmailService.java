@@ -6,6 +6,7 @@ import com.alok.home.email.repository.TransactionEmailRepository;
 import com.alok.home.commons.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,18 +29,23 @@ public class TransactionEmailService {
                                 .bank(transactionEmail.getBank())
                                 .description(transactionEmail.getDescription())
                                 .amount(transactionEmail.getAmount())
+                                .timestamp(transactionEmail.getTimestamp())
+                                .verified(transactionEmail.isVerified())
+                                .verifiedBy(transactionEmail.getVerifiedBy())
+                                .accepted(transactionEmail.isAccepted())
                                 .build()
                 )
                 .toList();
     }
 
     @Transactional
-    public void updateTransactionVerified(String id, Boolean accepted) {
+    public void updateTransactionVerified(String id, TransactionEmailDTO transactionEmailDTO) {
 
         TransactionEmail transaction = transactionEmailRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction ID not found"));
 
-        transaction.setVerified(true);
-        transaction.setAccepted(accepted);
+        transaction.setVerified(transactionEmailDTO.isVerified());
+        transaction.setAccepted(transactionEmailDTO.isAccepted());
+        transaction.setVerifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

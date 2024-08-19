@@ -14,5 +14,8 @@ public class TransactionEmailDTO {
     private String bank;
     private String description;
     private double amount;
+    private boolean verified;
+    private String verifiedBy;
+    private boolean accepted;
     private LocalDateTime timestamp;
 }

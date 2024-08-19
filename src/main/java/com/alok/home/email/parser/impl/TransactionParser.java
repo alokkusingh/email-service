@@ -23,7 +23,6 @@ public class TransactionParser implements Parser {
                     .id(UUID.randomUUID().toString())
                     .subject(subject)
                     .email(senderEmail)
-                    .content(content)
                     .bank(ParserUtils.getTransactionType(senderEmail, subject).name())
                     .amount(ParserUtils.getAmountRetriever(senderEmail, subject).retrieve(content))
                     .description(ParserUtils.getRemarksRetriever(senderEmail, subject).retrieve(content))
