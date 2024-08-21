@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class HdfcSBAmountRetriever implements AmountRetriever {
 
     // Rs.165.00 has been debited from account **XXXX to VPA paytmqr69gdim0mu8@paytm on 18-08-24. Your UPI transaction reference
-    private static final Pattern PATTERN = Pattern.compile("Rs.([0-9]{1,5}.[0-9]{2}) has been debited from account");
+    private static final Pattern PATTERN = Pattern.compile("Rs.([0-9]{1,5}[,]{0,1}[0-9]{1,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) has been debited from account");
 
     @Override
     public double retrieve(String content) {
@@ -19,7 +19,7 @@ public class HdfcSBAmountRetriever implements AmountRetriever {
 
         if (matcher.find()) {
             String substring = matcher.group(1);
-            return Double.parseDouble(substring);
+            return Double.parseDouble(substring.replace(",", ""));
         } else {
             log.warn("Pattern not found in the content.");
         }

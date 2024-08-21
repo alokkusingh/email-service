@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class AxisCCAmountRetriever implements AmountRetriever {
-    private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR (.*) at ");
+
+    // Thank you for using your credit card no. XX.... for INR 1300 at GOOGLEPLAY on 16-08-2024 09:23:59 IST.
+    private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR ([0-9]{1,5}[,]{0,1}[0-9]{1,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
 
     @Override
     public double retrieve(String content) {
@@ -17,7 +19,7 @@ public class AxisCCAmountRetriever implements AmountRetriever {
         if (matcher.find()) {
             String substring = matcher.group(1);
             try {
-                return Double.parseDouble(substring);
+                return Double.parseDouble(substring.replace(",", ""));
             } catch (NumberFormatException e) {
                 // Handle the exception, log or return a default value
                 return 0.0;

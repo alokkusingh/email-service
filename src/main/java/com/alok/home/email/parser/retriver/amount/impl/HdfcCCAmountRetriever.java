@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class HdfcCCAmountRetriever implements AmountRetriever {
 
     // Thank you for using your HDFC Bank Credit Card ending XXXX for Rs 500.00 at CRED_FASTAG on 16-08-2024 14:00:55. Authorization code
-    private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for Rs ([0-9]{1,5}.[0-9]{2}) at ");
+    private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for Rs ([0-9]{1,5}[,]{0,1}[0-9]{1,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
 
     @Override
     public double retrieve(String content) {
@@ -18,7 +18,7 @@ public class HdfcCCAmountRetriever implements AmountRetriever {
 
         if (matcher.find()) {
             String substring = matcher.group(1);
-            return Double.parseDouble(substring);
+            return Double.parseDouble(substring.replace(",", ""));
         } else {
             log.warn("Pattern not found in the content.");
         }
