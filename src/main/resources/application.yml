@@ -17,7 +17,7 @@ spring:
     mail:
       host: smtp.gmail.com
       port: 587
-      username: alok.ku.singh@gmail.com
+      #username: provided at runtime
       #password: provided at runtime
       test-connection: false
       properties:

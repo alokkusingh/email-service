@@ -30,4 +30,4 @@ auth:
         home-stack-auth: https://dashboard.aloklive.info/home/auth/home/token/validat
 
 server:
-  port: 8085
+  port: 8081

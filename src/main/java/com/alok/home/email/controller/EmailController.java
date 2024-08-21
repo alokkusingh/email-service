@@ -19,7 +19,7 @@ public class EmailController {
     @GetMapping(value = "/send")
     public ResponseEntity<Void> sendEmail() {
 
-        emailService.sendSimpleMessage("a202.jyothigt@gmail.com", "Mail from Home Stack", "This is first mail");
+        emailService.sendSimpleMessage("alok.ku.singh@gmail.com", "Mail from Home Stack", "This is first mail");
 
         return ResponseEntity.ok().build();
     }

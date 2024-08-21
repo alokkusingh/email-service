@@ -84,6 +84,11 @@ public class ParserUtils {
         }
 
         if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
+                && subject.contains("View: Account update for your HDFC Bank")) {
+            return EmailTransactionType.HDFC_SB_TRANS;
+        }
+
+        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
                 && (subject.equalsIgnoreCase("You have done a UPI txn. Check details!"))) {
             return EmailTransactionType.HDFC_SB_TRANS;
         }
