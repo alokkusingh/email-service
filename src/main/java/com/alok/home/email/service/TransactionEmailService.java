@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +36,7 @@ public class TransactionEmailService {
                                 .accepted(transactionEmail.isAccepted())
                                 .build()
                 )
+                .sorted(Comparator.comparing(TransactionEmailDTO::getTimestamp).reversed())
                 .toList();
     }
 
