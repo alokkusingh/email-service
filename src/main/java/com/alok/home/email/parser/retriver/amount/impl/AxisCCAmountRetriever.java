@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class AxisCCAmountRetriever implements AmountRetriever {
 
     // Thank you for using your credit card no. XX.... for INR 1300 at GOOGLEPLAY on 16-08-2024 09:23:59 IST.
-    private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR ([0-9]{1,5}[,]{0,1}[0-9]{1,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
+    private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
 
     @Override
     public double retrieve(String content) {
