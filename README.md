@@ -38,5 +38,3 @@ java -jar target/email-service-1.0.0.jar --spring.mail.password= --email.passwor
 ```shell
 curl -X GET http://localhost:8081/home/email/send
 ```
-
-
