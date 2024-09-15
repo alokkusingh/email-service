@@ -1,9 +1,9 @@
 package com.alok.home.email.service;
 
+import com.alok.home.commons.dto.exception.ResourceNotFoundException;
 import com.alok.home.email.entity.impl.TransactionEmail;
 import com.alok.home.email.parser.dto.TransactionEmailDTO;
 import com.alok.home.email.repository.TransactionEmailRepository;
-import com.alok.home.commons.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
