@@ -12,6 +12,8 @@ public class HdfcCCAmountRetriever implements AmountRetriever {
     // Thank you for using your HDFC Bank Credit Card ending XXXX for Rs 500.00 at CRED_FASTAG on 16-08-2024 14:00:55. Authorization code
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for Rs ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
 
+    // Thank you for using HDFC Bank Card XXXXXX for Rs. 755.1 at AMAZON on 06-10-2024 09:05:55
+
     @Override
     public double retrieve(String content) {
         Matcher matcher = PATTERN.matcher(content);
