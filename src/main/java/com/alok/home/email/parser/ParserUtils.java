@@ -13,63 +13,33 @@ public class ParserUtils {
     private ParserUtils() {}
 
     public static AmountRetriever getAmountRetriever(String senderEmail, String subject) {
-        switch (getTransactionType(senderEmail, subject)) {
-            case HDFC_CC_TRANS -> {
-                return new HdfcCCAmountRetriever();
-            }
-            case HDFC_SB_TRANS -> {
-                return new HdfcSBAmountRetriever();
-            }
-            case SBI_CC_TRANS -> {
-                return new SbiCCAmountRetriever();
-            }
-            case AXIS_CC_TRANS -> {
-                return new AxisCCAmountRetriever();
-            }
-            default -> {
-                return new UnknownAmountRetriever();
-            }
-        }
+        return switch (getTransactionType(senderEmail, subject)) {
+            case HDFC_CC_TRANS -> new HdfcCCAmountRetriever();
+            case HDFC_SB_TRANS -> new HdfcSBAmountRetriever();
+            case SBI_CC_TRANS -> new SbiCCAmountRetriever();
+            case AXIS_CC_TRANS -> new AxisCCAmountRetriever();
+            default -> new UnknownAmountRetriever();
+        };
     }
 
     public static RemarksRetriever getRemarksRetriever(String senderEmail, String subject) {
-        switch (getTransactionType(senderEmail, subject)) {
-            case HDFC_CC_TRANS -> {
-                return new HdfcCCRemarksRetriever();
-            }
-            case HDFC_SB_TRANS -> {
-                return new HdfcSBRemarksRetriever();
-            }
-            case SBI_CC_TRANS -> {
-                return new SbiCCRemarksRetriever();
-            }
-            case AXIS_CC_TRANS -> {
-                return new AxisCCRemarksRetriever();
-            }
-            default -> {
-                return new UnknownRemarksRetriever();
-            }
-        }
+        return switch (getTransactionType(senderEmail, subject)) {
+            case HDFC_CC_TRANS -> new HdfcCCRemarksRetriever();
+            case HDFC_SB_TRANS -> new HdfcSBRemarksRetriever();
+            case SBI_CC_TRANS -> new SbiCCRemarksRetriever();
+            case AXIS_CC_TRANS -> new AxisCCRemarksRetriever();
+            default -> new UnknownRemarksRetriever();
+        };
     }
 
     public static TransactionDateRetriever getTransactionDateRetriever(String senderEmail, String subject) {
-        switch (getTransactionType(senderEmail, subject)) {
-            case HDFC_CC_TRANS -> {
-                return new HdfcCCTransactionDateRetriever();
-            }
-            case HDFC_SB_TRANS -> {
-                return new HdfcSBTransactionDateRetriever();
-            }
-            case SBI_CC_TRANS -> {
-                return new SbiCCTransactionDateRetriever();
-            }
-            case AXIS_CC_TRANS -> {
-                return new AxisCCTransactionDateRetriever();
-            }
-            default -> {
-                return new UnknownTransactionDateRetriever();
-            }
-        }
+        return switch (getTransactionType(senderEmail, subject)) {
+            case HDFC_CC_TRANS -> new HdfcCCTransactionDateRetriever();
+            case HDFC_SB_TRANS -> new HdfcSBTransactionDateRetriever();
+            case SBI_CC_TRANS -> new SbiCCTransactionDateRetriever();
+            case AXIS_CC_TRANS -> new AxisCCTransactionDateRetriever();
+            default -> new UnknownTransactionDateRetriever();
+        };
     }
 
     public static EmailTransactionType getTransactionType(String senderEmail, String subject) {

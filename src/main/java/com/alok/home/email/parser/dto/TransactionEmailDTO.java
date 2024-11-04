@@ -1,21 +1,15 @@
 package com.alok.home.email.parser.dto;
 
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Builder
-@Data
-public class TransactionEmailDTO {
-
-    private String id;
-    private String bank;
-    private String description;
-    private double amount;
-    private boolean verified;
-    private String verifiedBy;
-    private boolean accepted;
-    private LocalDateTime timestamp;
-}
+public record TransactionEmailDTO (
+    String id,
+    String bank,
+    String description,
+    double amount,
+    boolean verified,
+    String verifiedBy,
+    boolean accepted,
+    LocalDateTime timestamp
+) {}

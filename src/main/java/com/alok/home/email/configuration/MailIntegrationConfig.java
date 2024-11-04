@@ -59,18 +59,14 @@ public class MailIntegrationConfig {
                 .transform(emailTransformer)
                 .handle(message -> {
                     System.out.println("New message received: " + message);
-                    if (message.getPayload() instanceof TransactionEmail) {
-                        TransactionEmail email = (TransactionEmail) message.getPayload();
+                    if (message.getPayload() instanceof TransactionEmail email) {
                         log.info(email.toString());
                         transactionEmailRepository.save(email);
-                    } else if (message.getPayload() instanceof StatementEmail) {
-                        StatementEmail email = (StatementEmail) message.getPayload();
+                    } else if (message.getPayload() instanceof StatementEmail email) {
                         log.info(email.toString());
-                    } else if (message.getPayload() instanceof NoContentEmail) {
-                        NoContentEmail email = (NoContentEmail) message.getPayload();
+                    } else if (message.getPayload() instanceof NoContentEmail email) {
                         log.info(email.toString());
-                    } else if (message.getPayload() instanceof FailedEmail) {
-                        FailedEmail email = (FailedEmail) message.getPayload();
+                    } else if (message.getPayload() instanceof FailedEmail email) {
                         log.info(email.toString());
                         failedEmailRepository.save(email);
                     } else {

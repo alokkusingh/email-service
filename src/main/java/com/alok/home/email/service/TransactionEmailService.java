@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class TransactionEmailService {
 
-    private TransactionEmailRepository transactionEmailRepository;
+    private final TransactionEmailRepository transactionEmailRepository;
 
     public TransactionEmailService(TransactionEmailRepository transactionEmailRepository) {
         this.transactionEmailRepository = transactionEmailRepository;
@@ -25,18 +25,18 @@ public class TransactionEmailService {
     public List<TransactionEmailDTO> getTransactions(Boolean verified) {
         return transactionEmailRepository.findTransactionsByVerified(verified).stream()
                 .map(
-                        transactionEmail -> TransactionEmailDTO.builder()
-                                .id(transactionEmail.getId())
-                                .bank(transactionEmail.getBank())
-                                .description(transactionEmail.getDescription())
-                                .amount(transactionEmail.getAmount())
-                                .timestamp(transactionEmail.getTimestamp())
-                                .verified(transactionEmail.isVerified())
-                                .verifiedBy(transactionEmail.getVerifiedBy())
-                                .accepted(transactionEmail.isAccepted())
-                                .build()
+                        transactionEmail -> new TransactionEmailDTO(
+                                transactionEmail.getId(),
+                                transactionEmail.getBank(),
+                                transactionEmail.getDescription(),
+                                transactionEmail.getAmount(),
+                                transactionEmail.isVerified(),
+                                transactionEmail.getVerifiedBy(),
+                                transactionEmail.isAccepted(),
+                                transactionEmail.getTimestamp()
+                        )
                 )
-                .sorted(Comparator.comparing(TransactionEmailDTO::getTimestamp).reversed())
+                .sorted(Comparator.comparing(TransactionEmailDTO::timestamp).reversed())
                 .toList();
     }
 
@@ -46,8 +46,8 @@ public class TransactionEmailService {
         TransactionEmail transaction = transactionEmailRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction ID not found"));
 
-        transaction.setVerified(transactionEmailDTO.isVerified());
-        transaction.setAccepted(transactionEmailDTO.isAccepted());
+        transaction.setVerified(transactionEmailDTO.verified());
+        transaction.setAccepted(transactionEmailDTO.accepted());
         transaction.setVerifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

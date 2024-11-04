@@ -1,10 +1,9 @@
-package com.alok.home.email.parser.factory.impl;
+package com.alok.home.email.parser.factory;
 
-import com.alok.home.email.parser.impl.TransactionParser;
-import com.alok.home.email.parser.factory.EmailParserFactory;
+import com.alok.home.email.parser.TransactionParser;
 import lombok.Getter;
 
-public class EmailTransactionParserFactory implements EmailParserFactory {
+public final class EmailTransactionParserFactory implements EmailParserFactory {
 
     @Getter
     private static EmailTransactionParserFactory instance = new EmailTransactionParserFactory();

@@ -82,15 +82,15 @@ public class EmailTransformer extends AbstractMailMessageTransformer<Email> {
         } else if (bodyPart.isMimeType("text/html")) {
             String html = (String) bodyPart.getContent();
             result = org.jsoup.Jsoup.parse(html).text();
-        } else if (bodyPart.getContent() instanceof MimeMultipart){
-            result = getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
+        } else if (bodyPart.getContent() instanceof MimeMultipart mimeMultipart){
+            result = getTextFromMimeMultipart(mimeMultipart);
         }
 
         return result;
     }
 
     private Email parseEmail(String senderEmailAddress, String subject, String content) {
-        return ParserFactoryUtils.getParser(senderEmailAddress, subject)
+        return ParserFactoryUtils.getEmailParserFactory(senderEmailAddress, subject)
                 .getParser()
                 .parseEmail(senderEmailAddress, subject, content);
     }

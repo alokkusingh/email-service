@@ -1,26 +1,16 @@
 package com.alok.home.email.parser.factory;
 
 import com.alok.home.email.enums.EmailType;
-import com.alok.home.email.parser.factory.impl.EmailIgnoreParserFactory;
-import com.alok.home.email.parser.factory.impl.EmailTransactionParserFactory;
 
 public class ParserFactoryUtils {
 
     private ParserFactoryUtils() {}
 
-    public static EmailParserFactory getParser(final String emailId, final String subject) {
-        switch (EmailUtils.getEmailType(emailId, subject)) {
-            case TRANSACTION -> {
-                return EmailTransactionParserFactory.getInstance();
-            }
-            case STATEMENT -> {
-                // TODO
-                return EmailIgnoreParserFactory.getInstance();
-            }
-            default -> {
-                return EmailIgnoreParserFactory.getInstance();
-            }
-        }
+    public static EmailParserFactory getEmailParserFactory(final String emailId, final String subject) {
+        return switch (EmailUtils.getEmailType(emailId, subject)) {
+            case TRANSACTION -> EmailTransactionParserFactory.getInstance();
+            case STATEMENT, UNKNOWN -> EmailIgnoreParserFactory.getInstance();
+        };
     }
 
 
@@ -29,20 +19,10 @@ public class ParserFactoryUtils {
         private EmailUtils() {}
 
         public static EmailType getEmailType(final String emailId, final String subject) {
-            if (emailId.equalsIgnoreCase("alerts@hdfcbank.net")) {
-                return EmailType.TRANSACTION;
-            }
-
-            if (emailId.equalsIgnoreCase("onlinesbicard@sbicard.com")) {
-                return EmailType.TRANSACTION;
-            }
-
-            if (emailId.equalsIgnoreCase("alerts@axisbank.com")) {
-                return EmailType.TRANSACTION;
-            }
-
-            return EmailType.UNKNOWN;
+            return switch (emailId.toLowerCase()) {
+               case "alerts@hdfcbank.net", "onlinesbicard@sbicard.com", "alerts@axisbank.com" ->  EmailType.TRANSACTION;
+               default -> EmailType.UNKNOWN;
+            };
         }
-
     }
 }

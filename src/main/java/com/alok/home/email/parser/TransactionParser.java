@@ -1,17 +1,15 @@
-package com.alok.home.email.parser.impl;
+package com.alok.home.email.parser;
 
 import com.alok.home.email.entity.Email;
 import com.alok.home.email.entity.impl.FailedEmail;
 import com.alok.home.email.entity.impl.TransactionEmail;
-import com.alok.home.email.parser.Parser;
-import com.alok.home.email.parser.ParserUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
 @Slf4j
-public class TransactionParser implements Parser {
+public final class TransactionParser implements Parser {
 
     @Getter
     private static TransactionParser instance = new TransactionParser();
