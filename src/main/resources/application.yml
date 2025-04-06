@@ -35,6 +35,9 @@ email:
   mailbox: INBOX
   pollRate: 30000
 
+database:
+  pollRate: 600000000
+
 management:
   endpoint:
     health:

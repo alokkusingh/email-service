@@ -3,7 +3,7 @@ package com.alok.home.email.configuration;
 import java.io.IOException;
 
 import com.alok.home.email.entity.Email;
-import com.alok.home.email.parser.factory.ParserFactoryUtils;
+import com.alok.home.email.parser.ParserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.mail.transformer.AbstractMailMessageTransformer;
@@ -37,7 +37,7 @@ public class EmailTransformer extends AbstractMailMessageTransformer<Email> {
             String email = ((InternetAddress) mailMessage.getFrom()[0]).getAddress();
             String content = getTextFromMessage(mailMessage);
 
-            return parseEmail(email, subject, content);
+            return ParserUtils.parseEmail(email, subject, content);
         } catch (MessagingException e) {
             log.error("MessagingException: {}", e);
         } catch (Exception e) {
@@ -87,11 +87,5 @@ public class EmailTransformer extends AbstractMailMessageTransformer<Email> {
         }
 
         return result;
-    }
-
-    private Email parseEmail(String senderEmailAddress, String subject, String content) {
-        return ParserFactoryUtils.getEmailParserFactory(senderEmailAddress, subject)
-                .getParser()
-                .parseEmail(senderEmailAddress, subject, content);
     }
 }
