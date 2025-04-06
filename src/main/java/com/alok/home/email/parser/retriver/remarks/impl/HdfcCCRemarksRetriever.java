@@ -11,16 +11,24 @@ public class HdfcCCRemarksRetriever implements RemarksRetriever {
 
     // Thank you for using your HDFC Bank Credit Card ending XXXX for Rs 500.00 at CRED_FASTAG on 16-08-2024 14:00:55. Authorization code
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for (.*). Authorization code");
+    private static final Pattern PATTERN2 = Pattern.compile("Thank you for using HDFC Bank Card ...... for (.*) Authorization code:- .* Please note that this transaction was conducted without OTP /PIN.");
 
     @Override
     public String retrieve(String content) {
         Matcher matcher = PATTERN.matcher(content);
-
         if (matcher.find()) {
             String substring = matcher.group(1);
             return substring;
         } else {
-            log.warn("Pattern not found in the content.");
+            log.warn("Pattern1 not found in the content.");
+        }
+
+        Matcher matcher2 = PATTERN2.matcher(content);
+        if (matcher.find()) {
+            String substring = matcher.group(1);
+            return substring;
+        } else {
+            log.warn("Pattern2 not found in the content.");
         }
 
         return "";
