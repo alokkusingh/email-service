@@ -1,23 +1,33 @@
 package com.alok.home.email.controller;
 
 import com.alok.home.email.service.EmailService;
+import com.alok.home.email.service.HomeStackApiService;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.alok.home.commons.dto.EmailRequest;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Collections;
+import java.util.Map;
 
 @RequestMapping()
 @RestController
 public class EmailController {
 
     private EmailService emailService;
+    private HomeStackApiService homeStackApiService;
 
-    public EmailController(EmailService emailService) {
+    public EmailController(EmailService emailService, HomeStackApiService homeStackApiService) {
         this.emailService = emailService;
+        this.homeStackApiService = homeStackApiService;
     }
 
     @GetMapping(value = "/send")
     public ResponseEntity<Void> sendEmail(
-            @RequestParam(name = "to", required = false, defaultValue = "alok.ku.singh@gmail.com") String to,
+            @RequestParam(name = "name", required = false, defaultValue = "alok.ku.singh@gmail.com") String to,
             @RequestParam(name = "subject", required = false, defaultValue = "Mail from Home Stack") String subject,
             @RequestParam(name = "body", required = false, defaultValue = "Test mail") String body
     ) {
@@ -27,9 +37,22 @@ public class EmailController {
     }
 
     @PostMapping(value = "/send")
-    public ResponseEntity<Void> sendEmailPost(@RequestBody() EmailRequest emailRequest) {
+    public ResponseEntity<Void> sendEmail(@RequestBody() EmailRequest emailRequest) {
 
         emailService.sendSimpleMessage(emailRequest.to(), emailRequest.subject(), emailRequest.body());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/sendHtml")
+    public ResponseEntity<Void> sendHtmlEmail(@RequestBody() EmailRequest emailRequest) throws MessagingException {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+        Map<String, Object> thymeleafModel = homeStackApiService.getDailySummaryReportData();
+        thymeleafModel.put("name", "Alok Singh");
+        thymeleafModel.put("heading", "This is Daily Report for " + LocalDate.now().minusDays(1).format(dateTimeFormatter) + ".");
+
+        emailService.sendHtmlMessage(emailRequest.to(), emailRequest.subject(), "template-thymeleaf-daily-report.html", thymeleafModel);
         return ResponseEntity.ok().build();
     }
 }

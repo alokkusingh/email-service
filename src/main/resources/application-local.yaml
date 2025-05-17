@@ -29,5 +29,13 @@ auth:
         google: https://dashboard.aloklive.info/home/auth/google/validate/id-token
         home-stack-auth: https://dashboard.aloklive.info/home/auth/home/token/validat
 
+home-api:
+  url: https://hdash.alok.digital/home/api
+  token:
+    issuer: home-stack-auth
+    url: https://hdash.alok.digital/home/auth/home/token/generate
+    scope: home_api_rw
+    audience: home-stack-api
+
 server:
   port: 8081
