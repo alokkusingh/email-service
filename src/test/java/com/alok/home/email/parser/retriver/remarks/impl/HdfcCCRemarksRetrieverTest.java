@@ -27,6 +27,26 @@ class HdfcCCRemarksRetrieverTest {
     }
 
     @Test
+    public void testRetrieveWithPattern3() {
+        String content = """
+                Rs.218.00 is debited from your HDFC Bank Credit Card ending 546 towards FLIPKART INTERNET PVT on 30 Aug, 2025 at 09:22:21. If you did not authorize this transaction, please report it immediately at: 1. When in India (Toll free): 1800 258 6161 2. When abroad: +9122 61606160 For more details
+                """;
+        String expected = "FLIPKART INTERNET PVT on 30 Aug, 2025 at 09:22:21";
+        String result = retriever.retrieve(content);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testRetrieveWithPattern3_2() {
+        String content = """
+               HDFC BANK Dear Customer, Greetings from HDFC Bank! Rs.218.00 is debited from your HDFC Bank Credit Card ending 546 towards FLIPKART INTERNET PVT on 30 Aug, 2025 at 09:22:21. If you did not authorize this transaction, please report it immediately at: 1. When in India (Toll free): 1800 258 6161 2. When abroad: +9122 61606160 For more details on this transaction, visit HDFC Bank MyCards. We're here to support you in every step of the way. Warm regards, HDFC Bank This is a system-generated email. Please do not reply. For more details on Service charges and Fees, click here. © HDFC Bank
+               """;
+        String expected = "FLIPKART INTERNET PVT on 30 Aug, 2025 at 09:22:21";
+        String result = retriever.retrieve(content);
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testRetrieveWithNoPattern() {
         String content = "Some random content without any matching pattern";
         String result = retriever.retrieve(content);

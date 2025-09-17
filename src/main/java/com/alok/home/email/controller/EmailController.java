@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.alok.home.commons.dto.EmailRequest;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Collections;
@@ -46,13 +47,12 @@ public class EmailController {
     @PostMapping(value = "/sendHtml")
     public ResponseEntity<Void> sendHtmlEmail(@RequestBody() EmailRequest emailRequest) throws MessagingException {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
-        Map<String, Object> thymeleafModel = homeStackApiService.getDailySummaryReportData();
+        Map<String, Object> thymeleafModel = homeStackApiService.getInvestmentReportDataForCurrentMonthAndPreviousMonth(YearMonth.now());
         thymeleafModel.put("name", "Alok Singh");
-        thymeleafModel.put("heading", "This is Daily Report for " + LocalDate.now().minusDays(1).format(dateTimeFormatter) + ".");
+        thymeleafModel.put("heading", "This is investment report for Current and previous Month");
 
-        emailService.sendHtmlMessage(emailRequest.to(), emailRequest.subject(), "template-thymeleaf-daily-report.html", thymeleafModel);
+        emailService.sendHtmlMessage(emailRequest.to(), emailRequest.subject(), "template-thymeleaf-investment-report.html", thymeleafModel);
         return ResponseEntity.ok().build();
     }
 }

@@ -51,6 +51,11 @@ public class ParserUtils {
         }
 
         if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
+                && subject.contains("debited via Credit Card **546")) {
+            return EmailTransactionType.HDFC_CC_TRANS;
+        }
+
+        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
                 && subject.contains("You have done a UPI txn")) {
             return EmailTransactionType.HDFC_SB_TRANS;
         }

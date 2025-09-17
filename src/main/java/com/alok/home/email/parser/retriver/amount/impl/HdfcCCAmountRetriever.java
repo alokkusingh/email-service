@@ -13,6 +13,7 @@ public class HdfcCCAmountRetriever implements AmountRetriever {
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for Rs ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
     private static final Pattern PATTERN2 = Pattern.compile("Thank you for using HDFC Bank Card ...... for Rs. ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
     // Thank you for using HDFC Bank Card XXXXXX for Rs. 755.1 at AMAZON on 06-10-2024 09:05:55
+    private static final Pattern PATTERN3 = Pattern.compile("Rs\\.([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) is debited from your HDFC Bank Credit Card ending \\d+ towards ");
 
     @Override
     public double retrieve(String content) {
@@ -30,6 +31,14 @@ public class HdfcCCAmountRetriever implements AmountRetriever {
             return Double.parseDouble(substring.replace(",", ""));
         } else {
             log.warn("Pattern2 not found in the content.");
+        }
+
+        matcher = PATTERN3.matcher(content);
+        if (matcher.find()) {
+            String substring = matcher.group(1);
+            return Double.parseDouble(substring.replace(",", ""));
+        } else {
+            log.warn("Pattern3 not found in the content.");
         }
 
         return 0.0;

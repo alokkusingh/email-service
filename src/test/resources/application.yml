@@ -1,0 +1,15 @@
+server:
+  servlet:
+    context-path: /home/email
+
+application:
+  id: home-stack-email
+
+spring:
+    application:
+        name: email-service
+
+
+
+
+

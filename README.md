@@ -19,7 +19,7 @@ java -jar target/email-service-1.0.0.jar --spring.mail.password= --email.passwor
 #### Build
 1. Maven Package
    ```shell
-   mvn clean package -DskipTests
+   mvn clean package
    ```
    ```
 2. Docker Build, Push & Run

@@ -21,11 +21,10 @@ public class MailTemplateConfiguration {
     @Bean
     public ITemplateResolver thymeleafTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setTemplateMode("HTML");
         templateResolver.setCharacterEncoding("UTF-8");
-        templateResolver.setPrefix("mail-templates/");
+        templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
 
         return templateResolver;
     }

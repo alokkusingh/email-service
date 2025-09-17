@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="${subject}">Daily Report</title>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            font-size: 16px;
+            width: 70%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .brand {
+            font-size: 1.5em;
+            color: green !important;
+            text-decoration: none;
+            font-weight: 800;
+            }
+            p {
+                margin-bottom: 15px;
+            }
+        .footer {
+            color: #aaa;
+            font-size: 0.8em;
+            font-weight: 300;
+        }.table {
+            width: 100%;
+            border: 1px solid gray;
+            border-collapse: collapse;
+            font-size: 10px;
+            }
+            th {
+                background-color: #f2f2f2;
+                padding: 10px;
+                text-align: center;
+                border: 1px solid gray;
+            }
+            td {
+                padding: 10px;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="https://hdash.alok.digital" class="brand">Home Stack</a>
+        </div>
+        <h4>Hello <span th:text="${name}"></span>!</h4>
+        <p th:text="${heading}"></p>
+
+        <div>
+            <h5>Current Month Investment Report</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Head</th>
+                    <th>Month Investment</th>
+                    <th>Month Return</th>
+                    <th>As On Investment</th>
+                    <th>As On Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${currentMonthInvestments.size() == 0}">
+                    <td colspan="2">No data available</td>
+                </tr>
+                <tr th:each="currentMonthInvestment : ${currentMonthInvestments}">
+                    <td th:text="${currentMonthInvestment.head}"></td>
+                    <td th:text="${currentMonthInvestment.monthInvestment}"></td>
+                    <td th:text="${currentMonthInvestment.monthReturn}"></td>
+                    <td th:text="${currentMonthInvestment.asOnInvestment}"></td>
+                    <td th:text="${currentMonthInvestment.asOnValue}"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h5>Previous Month Investment Report</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Head</th>
+                    <th>Month Investment</th>
+                    <th>Month Return</th>
+                    <th>As On Investment</th>
+                    <th>As On Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${previousMonthInvestments.size() == 0}">
+                    <td colspan="2">No data available</td>
+                </tr>
+                <tr th:each="previousMonthInvestment : ${previousMonthInvestments}">
+                    <td th:text="${previousMonthInvestment.head}"></td>
+                    <td th:text="${previousMonthInvestment.monthInvestment}"></td>
+                    <td th:text="${previousMonthInvestment.monthReturn}"></td>
+                    <td th:text="${previousMonthInvestment.asOnInvestment}"></td>
+                    <td th:text="${previousMonthInvestment.asOnValue}"></td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <p>Thank You,</p>
+        <p>Home Stack</p>
+        <div class="footer">
+            <p>This is automated mail</p>
+        </div>
+    </div>
+</body>
+</html>
