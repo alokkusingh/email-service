@@ -33,7 +33,7 @@ java -jar target/email-service-1.0.0.jar --spring.mail.password= --email.passwor
    docker push alokkusingh/email-service:2.0.0
    ```
    ```shell
-   docker run -d -p 8081:8081 --rm --name email-service alokkusingh/email-service --spring.mail.password= --email.password=
+   docker run -d -p 8081:8081 -v /Users/aloksingh/git/email-service/logs:/opt/logs --rm --name email-service alokkusingh/email-service --spring.profiles.active=local --spring.mail.password= --email.password=
    ```
 ### Test
 ```shell

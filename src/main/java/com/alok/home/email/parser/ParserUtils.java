@@ -45,42 +45,35 @@ public class ParserUtils {
     }
 
     public static EmailTransactionType getTransactionType(String senderEmail, String subject) {
-        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
-                && subject.equalsIgnoreCase("Alert :  Update on your HDFC Bank Credit Card")) {
-            return EmailTransactionType.HDFC_CC_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
-                && subject.contains("debited via Credit Card **546")) {
-            return EmailTransactionType.HDFC_CC_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
-                && subject.contains("You have done a UPI txn")) {
-            return EmailTransactionType.HDFC_SB_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
-                && subject.contains("View: Account update for your HDFC Bank")) {
-            return EmailTransactionType.HDFC_SB_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("alerts@hdfcbank.net")
-                && (subject.equalsIgnoreCase("You have done a UPI txn. Check details!"))) {
-            return EmailTransactionType.HDFC_SB_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("onlinesbicard@sbicard.com")
-                && (subject.equalsIgnoreCase("Transaction Alert from SBI Card"))) {
-            return EmailTransactionType.SBI_CC_TRANS;
-        }
-
-        if (senderEmail.equalsIgnoreCase("alerts@axisbank.com")
-                && (subject.contains("Transaction alert on Axis Bank Credit Card"))) {
-            return EmailTransactionType.AXIS_CC_TRANS;
-        }
-
-        return EmailTransactionType.UNKNOWN_TRANS;
+        return switch (senderEmail.toLowerCase()) {
+            case "alerts@hdfcbank.net" -> {
+                if (subject.equalsIgnoreCase("Alert :  Update on your HDFC Bank Credit Card") ||
+                        subject.contains("debited via Credit Card **546")) {
+                    yield EmailTransactionType.HDFC_CC_TRANS;
+                } else if (subject.contains("You have done a UPI txn") ||
+                        subject.contains("View: Account update for your HDFC Bank") ||
+                        subject.equalsIgnoreCase("You have done a UPI txn. Check details!")) {
+                    yield EmailTransactionType.HDFC_SB_TRANS;
+                } else {
+                    yield EmailTransactionType.UNKNOWN_TRANS;
+                }
+            }
+            case "onlinesbicard@sbicard.com" -> {
+                if (subject.equalsIgnoreCase("Transaction Alert from SBI Card")) {
+                    yield EmailTransactionType.SBI_CC_TRANS;
+                } else {
+                    yield EmailTransactionType.UNKNOWN_TRANS;
+                }
+            }
+            case "alerts@axisbank.com" -> {
+                if (subject.contains("Transaction alert on Axis Bank Credit Card")) {
+                    yield EmailTransactionType.AXIS_CC_TRANS;
+                } else {
+                    yield EmailTransactionType.UNKNOWN_TRANS;
+                }
+            }
+            default -> EmailTransactionType.UNKNOWN_TRANS;
+        };
     }
 
     public static Email parseEmail(String senderEmailAddress, String subject, String content) {

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.5.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.alok.home.email</groupId>
@@ -18,7 +18,11 @@
         <license/>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <id>alokkusingh</id>
+            <name>Alok Singh</name>
+            <email>alok.ku.singh@gmail.com</email>
+        </developer>
     </developers>
     <scm>
         <connection/>
@@ -27,7 +31,9 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <home.commons.version>2.0.12</home.commons.version>
     </properties>
     <dependencies>
@@ -85,6 +91,17 @@
         </dependency>
 
         <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>6.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>6.3.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
@@ -102,10 +119,12 @@
             <version>1.16.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.40</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -127,6 +146,24 @@
 
     <build>
         <plugins>
+            <!-- add below plugin because for Java 25, alone spring boot plugin was not processing Lombok annotations-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>25</source>
+                    <target>25</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.40</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -10,8 +10,6 @@ import org.springframework.integration.mail.transformer.AbstractMailMessageTrans
 import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
-
-
 import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;

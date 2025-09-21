@@ -25,7 +25,6 @@ public class MailIntegrationConfig {
 
     private final String SUBJECT_KEYWORDS = "Home Stack Email Test";
 
-
     @Bean
     public IntegrationFlow mailIntegration(
             EmailProperties props,
@@ -58,20 +57,21 @@ public class MailIntegrationConfig {
                 })
                 .transform(emailTransformer)
                 .handle(message -> {
-                    System.out.println("New message received: " + message);
-                    if (message.getPayload() instanceof TransactionEmail email) {
-                        log.info(email.toString());
-                        transactionEmailRepository.save(email);
-                    } else if (message.getPayload() instanceof StatementEmail email) {
-                        log.info(email.toString());
-                    } else if (message.getPayload() instanceof NoContentEmail email) {
-                        log.info(email.toString());
-                    } else if (message.getPayload() instanceof FailedEmail email) {
-                        log.info(email.toString());
-                        failedEmailRepository.save(email);
-                    } else {
-                        Email email = (Email) message.getPayload();
-                        log.info(email.toString());
+                    IO.println("New message arrived: " + message);
+                    log.info("New message arrived: {}", message);
+                    switch (message.getPayload()) {
+                        case TransactionEmail email -> {
+                            log.info(email.toString());
+                            transactionEmailRepository.save(email);
+                        }
+                        case StatementEmail email -> log.info(email.toString());
+                        case NoContentEmail email -> log.info(email.toString());
+                        case FailedEmail email -> {
+                            log.info(email.toString());
+                            failedEmailRepository.save(email);
+                        }
+                        case Email email -> log.info(email.toString());
+                        default -> log.info("Unknown payload type: {}", message.getPayload());
                     }
                 })
                 .get();

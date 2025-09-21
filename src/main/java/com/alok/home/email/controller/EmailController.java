@@ -18,8 +18,8 @@ import java.util.Map;
 @RestController
 public class EmailController {
 
-    private EmailService emailService;
-    private HomeStackApiService homeStackApiService;
+    private final EmailService emailService;
+    private final HomeStackApiService homeStackApiService;
 
     public EmailController(EmailService emailService, HomeStackApiService homeStackApiService) {
         this.emailService = emailService;
