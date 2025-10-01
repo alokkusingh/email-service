@@ -71,6 +71,15 @@ class ParserUtilsTest {
     }
 
     @Test
+    void testAxisCcTransCardNum() {
+        EmailTransactionType type = ParserUtils.getTransactionType(
+                "alerts@axisbank.com",
+                "INR 2526 spent on credit card no. XX617"
+        );
+        assertEquals(EmailTransactionType.AXIS_CC_TRANS, type);
+    }
+
+    @Test
     void testUnknownTrans() {
         EmailTransactionType type = ParserUtils.getTransactionType(
                 "unknown@bank.com",

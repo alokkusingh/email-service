@@ -18,23 +18,22 @@ java -jar target/email-service-1.0.0.jar --spring.mail.password= --email.passwor
 
 #### Build
 1. Maven Package
-   ```shell
-   mvn clean package
-   ```
-   ```
+```shell
+mvn clean package
+```
 2. Docker Build, Push & Run
-   ```shell
-   docker build -t alokkusingh/email-service:latest -t alokkusingh/email-service:2.0.0 --build-arg JAR_FILE=target/email-service-2.0.0.jar .
-   ```
-   ```shell
-   docker push alokkusingh/email-service:latest
-   ```
-   ```shell
-   docker push alokkusingh/email-service:2.0.0
-   ```
-   ```shell
-   docker run -d -p 8081:8081 -v /Users/aloksingh/git/email-service/logs:/opt/logs --rm --name email-service alokkusingh/email-service --spring.profiles.active=local --spring.mail.password= --email.password=
-   ```
+```shell
+docker build -t alokkusingh/email-service:latest -t alokkusingh/email-service:2.1.0 --build-arg JAR_FILE=target/email-service-2.0.0.jar .
+```
+```shell
+docker push alokkusingh/email-service:latest
+```
+```shell
+docker push alokkusingh/email-service:2.1.0
+```
+```shell
+docker run -d -p 8081:8081 -v /Users/aloksingh/git/email-service/logs:/opt/logs --rm --name email-service alokkusingh/email-service --spring.profiles.active=local --spring.mail.password= --email.password=
+```
 ### Test
 ```shell
 curl -X GET http://localhost:8081/home/email/send

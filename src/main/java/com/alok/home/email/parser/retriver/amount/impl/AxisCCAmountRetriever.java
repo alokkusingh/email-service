@@ -11,6 +11,7 @@ public class AxisCCAmountRetriever implements AmountRetriever {
 
     // Thank you for using your credit card no. XX.... for INR 1300 at GOOGLEPLAY on 16-08-2024 09:23:59 IST.
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for INR ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2}) at ");
+    private static final Pattern PATTERN_2 = Pattern.compile("Transaction Amount:\\s*INR ([0-9]{0,5}[,]{0,1}[0-9]{0,5}[,]{0,1}[0-9]{1,5}.[0-9]{0,2})\\s*Merchant Name:");
 
     @Override
     public double retrieve(String content) {
@@ -26,6 +27,19 @@ public class AxisCCAmountRetriever implements AmountRetriever {
             }
         } else {
             log.warn("Pattern not found in the content.");
+        }
+
+        matcher = PATTERN_2.matcher(content);
+        if (matcher.find()) {
+            String substring = matcher.group(1);
+            try {
+                return Double.parseDouble(substring.replace(",", ""));
+            } catch (NumberFormatException e) {
+                // Handle the exception, log or return a default value
+                return 0.0;
+            }
+        } else {
+            log.warn("Pattern 2 not found in the content.");
         }
 
         return 0.0;

@@ -68,6 +68,8 @@ public class ParserUtils {
             case "alerts@axisbank.com" -> {
                 if (subject.contains("Transaction alert on Axis Bank Credit Card")) {
                     yield EmailTransactionType.AXIS_CC_TRANS;
+                } else if (subject.contains("spent on credit card no. XX617")) {
+                    yield EmailTransactionType.AXIS_CC_TRANS;
                 } else {
                     yield EmailTransactionType.UNKNOWN_TRANS;
                 }

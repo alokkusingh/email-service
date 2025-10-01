@@ -12,6 +12,7 @@ public class AxisCCRemarksRetriever implements RemarksRetriever {
 
     // Thank you for using your credit card no. XXYYYY for INR 1300 at GOOGLEPLAY on 16-08-2024 09:23:59 IST.
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your credit card no. XX.... for (.*) IST.");
+    private static final Pattern PATTERN_2 = Pattern.compile("Merchant Name:\\s*(.*)\\s*Axis Bank Credit Card No.");
 
     @Override
     public String retrieve(String content) {
@@ -22,6 +23,14 @@ public class AxisCCRemarksRetriever implements RemarksRetriever {
             return substring;
         } else {
             log.warn("Pattern not found in the content.");
+        }
+
+        matcher = PATTERN_2.matcher(content);
+        if (matcher.find()) {
+            String substring = matcher.group(1);
+            return "Merchant Name: " + substring;
+        } else {
+            log.warn("Pattern 2 not found in the content.");
         }
 
         return "";
