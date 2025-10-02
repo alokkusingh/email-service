@@ -4,6 +4,7 @@ import com.alok.home.commons.dto.api.response.ExpensesMonthSumByCategoryResponse
 import com.alok.home.commons.dto.api.response.ExpensesResponseAggByDay;
 import com.alok.home.commons.dto.api.response.InvestmentsResponse;
 import com.alok.home.email.parser.dto.MonthInvestmentRecord;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
+@Slf4j
 @Service
 public class HomeStackApiService {
 
@@ -45,6 +47,7 @@ public class HomeStackApiService {
             ExpensesMonthSumByCategoryResponse expensesMonthSumByCategoryResponse = homeApiRestTemplate
                     .getForEntity(apiBaseUrl + "/expense/sum_by_category_month", ExpensesMonthSumByCategoryResponse.class)
                     .getBody();
+            log.debug("ExpensesMonthSumByCategoryResponse: {}", expensesMonthSumByCategoryResponse);
 
             LocalDate today = LocalDate.now();
             response.put("thisMonthSpendCategories", expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
@@ -94,6 +97,7 @@ public class HomeStackApiService {
             ExpensesResponseAggByDay expensesResponseAggByDay = homeApiRestTemplate
                     .getForEntity(apiBaseUrl + "/expense/current_month_by_day", ExpensesResponseAggByDay.class)
                     .getBody();
+            log.debug("ExpensesResponseAggByDay: {}", expensesResponseAggByDay);
 
             response.put("yesterdayExpense", df.format(Math.round(expensesResponseAggByDay.getExpenses().stream()
                     .filter(expenseAggByDay -> expenseAggByDay.getDate().equals(today.minusDays(1)))
@@ -101,7 +105,7 @@ public class HomeStackApiService {
                     .reduce(0d, Double::sum))));
         } catch (RuntimeException rte) {
             rte.printStackTrace();
-            System.out.println("Failed to send email, error: "  + rte.getMessage());
+            log.error("Failed to read expense details and parse, error: {}",  rte.getMessage());
         }
 
         return response;
@@ -128,6 +132,8 @@ public class HomeStackApiService {
             InvestmentsResponse investmentsResponse = homeApiRestTemplate
                     .getForEntity(apiBaseUrl + "/investment/all", InvestmentsResponse.class)
                     .getBody();
+
+            log.debug("InvestmentsResponse: {}", investmentsResponse);
 
             List<MonthInvestmentRecord> currentMonthInvestments = new ArrayList<>(investmentsResponse.getMonthInvestments().stream()
                     .filter(monthInvestments -> monthInvestments.getYearMonth().equals(yearMonth.toString()))
@@ -197,7 +203,7 @@ public class HomeStackApiService {
 
         } catch (RuntimeException rte) {
             rte.printStackTrace();
-            System.out.println("Failed to send email, error: "  + rte.getMessage());
+            log.error("Failed to send email, error: {}",  rte.getMessage());
         }
 
         return Collections.emptyList();

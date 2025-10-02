@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Collections;
 import java.util.Map;
 
-@RequestMapping()
+@RequestMapping("/send")
 @RestController
 public class EmailController {
 
@@ -26,7 +26,7 @@ public class EmailController {
         this.homeStackApiService = homeStackApiService;
     }
 
-    @GetMapping(value = "/send")
+    @GetMapping()
     public ResponseEntity<Void> sendEmail(
             @RequestParam(name = "name", required = false, defaultValue = "alok.ku.singh@gmail.com") String to,
             @RequestParam(name = "subject", required = false, defaultValue = "Mail from Home Stack") String subject,
@@ -37,14 +37,14 @@ public class EmailController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/send")
+    @PostMapping()
     public ResponseEntity<Void> sendEmail(@RequestBody() EmailRequest emailRequest) {
 
         emailService.sendSimpleMessage(emailRequest.to(), emailRequest.subject(), emailRequest.body());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/sendHtml")
+    @PostMapping(value = "/html")
     public ResponseEntity<Void> sendHtmlEmail(@RequestBody() EmailRequest emailRequest) throws MessagingException {
 
 
@@ -53,6 +53,33 @@ public class EmailController {
         thymeleafModel.put("heading", "This is investment report for Current and previous Month");
 
         emailService.sendHtmlMessage(emailRequest.to(), emailRequest.subject(), "template-thymeleaf-investment-report.html", thymeleafModel);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/dailyReport")
+    public ResponseEntity<Void> sendDailyReport(@RequestBody() EmailRequest emailRequest) throws MessagingException {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+        Map<String, Object> thymeleafModel = homeStackApiService.getDailySummaryReportData();
+
+        thymeleafModel.put("heading", "This is Daily Report for " + LocalDate.now().minusDays(1).format(dateTimeFormatter) + ".");
+
+        thymeleafModel.put("name", "Sir");
+        emailService.sendHtmlMessage(emailRequest.to(), "Daily Report - " + LocalDate.now(), "template-thymeleaf-daily-report.html", thymeleafModel);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/investmentReport")
+    public ResponseEntity<Void> sendInvestmentReport(@RequestBody() EmailRequest emailRequest) throws MessagingException {
+
+        Map<String, Object> thymeleafModel = homeStackApiService.getInvestmentReportDataForCurrentMonthAndPreviousMonth(YearMonth.now());
+
+        thymeleafModel.put("heading", "Please find investment report as follows.");
+        thymeleafModel.put("name", "Sir");
+        emailService.sendHtmlMessage(emailRequest.to(), "Investment Report - " + LocalDate.now(), "template-thymeleaf-investment-report.html", thymeleafModel);
+
         return ResponseEntity.ok().build();
     }
 }

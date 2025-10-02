@@ -26,7 +26,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/actuator", "/actuator/**").permitAll();
 
                     auth.requestMatchers("/transactions", "/transactions/**").hasAnyRole("ADMIN", "USER", "home_api_ro", "home_api_rw", "LOCALHOST");
-                    auth.requestMatchers("/send", "/send/**").hasAnyRole("ADMIN", "USER", "home_api_ro", "home_api_rw", "LOCALHOST");
+                    auth.requestMatchers("/send", "/send/**").hasAnyRole("ADMIN", "LOCALHOST");
 
                     auth.anyRequest().authenticated();
                 })
