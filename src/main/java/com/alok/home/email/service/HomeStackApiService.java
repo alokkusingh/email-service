@@ -5,6 +5,7 @@ import com.alok.home.commons.dto.api.response.ExpensesResponseAggByDay;
 import com.alok.home.commons.dto.api.response.InvestmentsResponse;
 import com.alok.home.email.parser.dto.MonthInvestmentRecord;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -120,47 +121,60 @@ public class HomeStackApiService {
     public Map<String, Object> getYearlyExpenseReportDataForYear(int year) {
 
         Map<String, Object> response = new HashMap<>();
+        response.put("year", year);
+        response.put("previousYear", year -1);
+
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
 
         try {
+            Map<String, Pair<Integer, Integer>> categoryYearsExpenseMap = new HashMap<>();
+
             ExpensesMonthSumByCategoryResponse expensesMonthSumByCategoryResponse = homeApiRestTemplate
                     .getForEntity(apiBaseUrl + "/expense/sum_by_category_year?year=" + year, ExpensesMonthSumByCategoryResponse.class)
                     .getBody();
             log.debug("ExpensesMonthSumByCategoryResponse: {}", expensesMonthSumByCategoryResponse);
 
-            response.put("thisYearSpendCategories", Optional.ofNullable(Optional.ofNullable(expensesMonthSumByCategoryResponse)
-                            .orElse(ExpensesMonthSumByCategoryResponse.builder().build()).getExpenseCategorySums())
-                            .orElse(Collections.emptyList())
-                    .stream()
-                    .sorted(Comparator.comparing(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getCategory))
-                    .map(expenseCategoryYearSum -> {
-                        Map<String, Object> expenseCategoryMap = new HashMap<>();
-                        expenseCategoryMap.put("year", expenseCategoryYearSum.getYear());
-                        expenseCategoryMap.put("category", expenseCategoryYearSum.getCategory());
-                        expenseCategoryMap.put("amount", currencyFormatter.format(
-                                Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue()));
-                        return expenseCategoryMap;
-                    })
-                    .toList());
-
             ExpensesMonthSumByCategoryResponse previousYearExpensesMonthSumByCategoryResponse = homeApiRestTemplate
                     .getForEntity(apiBaseUrl + "/expense/sum_by_category_year?year=" + (year -1), ExpensesMonthSumByCategoryResponse.class)
                     .getBody();
             log.debug("Previous Year ExpensesMonthSumByCategoryResponse: {}", previousYearExpensesMonthSumByCategoryResponse);
-            response.put("previousYearSpendCategories", Optional.ofNullable(Optional.ofNullable(previousYearExpensesMonthSumByCategoryResponse)
+
+            Optional.ofNullable(Optional.ofNullable(expensesMonthSumByCategoryResponse)
                             .orElse(ExpensesMonthSumByCategoryResponse.builder().build()).getExpenseCategorySums())
-                            .orElse(Collections.emptyList())
+                    .orElse(Collections.emptyList())
+                    .forEach(expenseCategoryYearSum -> {
+                        categoryYearsExpenseMap.putIfAbsent(expenseCategoryYearSum.getCategory(), Pair.with(0,0));
+                        categoryYearsExpenseMap.compute(expenseCategoryYearSum.getCategory(),
+                                (k, yearSums) -> Pair.with(
+                                        yearSums.getValue0() + Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue(),
+                                        yearSums.getValue1()
+                                ));
+                    });
+
+            Optional.ofNullable(Optional.ofNullable(previousYearExpensesMonthSumByCategoryResponse)
+                            .orElse(ExpensesMonthSumByCategoryResponse.builder().build()).getExpenseCategorySums())
+                    .orElse(Collections.emptyList())
+                    .forEach(expenseCategoryYearSum -> {
+                        categoryYearsExpenseMap.putIfAbsent(expenseCategoryYearSum.getCategory(), Pair.with(0,0));
+                        categoryYearsExpenseMap.compute(expenseCategoryYearSum.getCategory(),
+                                (k, yearSums) -> Pair.with(
+                                        yearSums.getValue0(),
+                                        yearSums.getValue1() + Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue()
+                                ));
+                    });
+
+            record CategoryYearAndPreviousYearExpense(String category, String yearExpense, String prevYearExpense) {}
+            List<CategoryYearAndPreviousYearExpense> categoryYearAndPreviousYearExpenseList = categoryYearsExpenseMap.entrySet()
                     .stream()
-                    .sorted(Comparator.comparing(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getCategory))
-                    .map(expenseCategoryYearSum -> {
-                        Map<String, Object> expenseCategoryMap = new HashMap<>();
-                        expenseCategoryMap.put("year", expenseCategoryYearSum.getYear());
-                        expenseCategoryMap.put("category", expenseCategoryYearSum.getCategory());
-                        expenseCategoryMap.put("amount", currencyFormatter.format(
-                                Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue()));
-                        return expenseCategoryMap;
-                    })
-                    .toList());
+                    .map(entry -> new CategoryYearAndPreviousYearExpense(
+                            entry.getKey(),
+                            currencyFormatter.format(entry.getValue().getValue0()),
+                            currencyFormatter.format(entry.getValue().getValue1())
+                    ))
+                    .sorted(Comparator.comparing(CategoryYearAndPreviousYearExpense::category))
+                    .toList();
+
+            response.put("categoryYearAndPreviousYearExpenseList", categoryYearAndPreviousYearExpenseList);
 
             // format sum in INR format without decimal
             response.put("thisYearTotalExpense", currencyFormatter.format(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()

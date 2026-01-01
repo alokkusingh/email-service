@@ -86,45 +86,23 @@
         </div>
 
         <div>
-            <h5>This Year Expenses by category</h5>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Year</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${thisYearSpendCategories.size() == 0}">
-                        <td colspan="2">No data available</td>
-                    </tr>
-                    <tr th:each="thisYearSpendCategory : ${thisYearSpendCategories}">
-                        <td th:text="${thisYearSpendCategory.year}"></td>
-                        <td th:text="${thisYearSpendCategory.category}"></td>
-                        <td th:text="${thisYearSpendCategory.amount}" class="align-right"></td>
-                    </tr>
-            </table>
-        </div>
-
-        <div>
-            <h5>Previous Year Expenses by category</h5>
+            <h5>Years Expenses by category</h5>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Year</th>
                     <th>Category</th>
-                    <th>Amount</th>
+                    <th><span th:text="${year}"></span></th>
+                    <th><span th:text="${previousYear}"></span></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${previousYearSpendCategories.size() == 0}">
-                    <td colspan="2">No data available</td>
+                <tr th:if="${categoryYearAndPreviousYearExpenseList.size() == 0}">
+                    <td colspan="3">No data available</td>
                 </tr>
-                <tr th:each="previousYearSpendCategory : ${previousYearSpendCategories}">
-                    <td th:text="${previousYearSpendCategory.year}"></td>
-                    <td th:text="${previousYearSpendCategory.category}"></td>
-                    <td th:text="${previousYearSpendCategory.amount}" class="align-right"></td>
+                <tr th:each="categoryYearAndPreviousYearExpense : ${categoryYearAndPreviousYearExpenseList}">
+                    <td th:text="${categoryYearAndPreviousYearExpense.category}"></td>
+                    <td th:text="${categoryYearAndPreviousYearExpense.yearExpense}" class="align-right"></td>
+                    <td th:text="${categoryYearAndPreviousYearExpense.prevYearExpense}" class="align-right"></td>
                 </tr>
             </table>
         </div>
