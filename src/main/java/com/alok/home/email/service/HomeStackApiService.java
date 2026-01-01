@@ -111,6 +111,76 @@ public class HomeStackApiService {
         return response;
     }
 
+    // URL: https://hdash.alok.digital/home/api/expense/sum_by_category_year?year=2025
+    // This Year Expense by category
+    // Previous Year Expense by category
+    // This Year Expense for each Category
+    // This year Expense by month
+
+    public Map<String, Object> getYearlyExpenseReportDataForYear(int year) {
+
+        Map<String, Object> response = new HashMap<>();
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
+
+        try {
+            ExpensesMonthSumByCategoryResponse expensesMonthSumByCategoryResponse = homeApiRestTemplate
+                    .getForEntity(apiBaseUrl + "/expense/sum_by_category_year?year=" + year, ExpensesMonthSumByCategoryResponse.class)
+                    .getBody();
+            log.debug("ExpensesMonthSumByCategoryResponse: {}", expensesMonthSumByCategoryResponse);
+
+            response.put("thisYearSpendCategories", Optional.ofNullable(Optional.ofNullable(expensesMonthSumByCategoryResponse)
+                            .orElse(ExpensesMonthSumByCategoryResponse.builder().build()).getExpenseCategorySums())
+                            .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getCategory))
+                    .map(expenseCategoryYearSum -> {
+                        Map<String, Object> expenseCategoryMap = new HashMap<>();
+                        expenseCategoryMap.put("year", expenseCategoryYearSum.getYear());
+                        expenseCategoryMap.put("category", expenseCategoryYearSum.getCategory());
+                        expenseCategoryMap.put("amount", currencyFormatter.format(
+                                Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue()));
+                        return expenseCategoryMap;
+                    })
+                    .toList());
+
+            ExpensesMonthSumByCategoryResponse previousYearExpensesMonthSumByCategoryResponse = homeApiRestTemplate
+                    .getForEntity(apiBaseUrl + "/expense/sum_by_category_year?year=" + (year -1), ExpensesMonthSumByCategoryResponse.class)
+                    .getBody();
+            log.debug("Previous Year ExpensesMonthSumByCategoryResponse: {}", previousYearExpensesMonthSumByCategoryResponse);
+            response.put("previousYearSpendCategories", Optional.ofNullable(Optional.ofNullable(previousYearExpensesMonthSumByCategoryResponse)
+                            .orElse(ExpensesMonthSumByCategoryResponse.builder().build()).getExpenseCategorySums())
+                            .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getCategory))
+                    .map(expenseCategoryYearSum -> {
+                        Map<String, Object> expenseCategoryMap = new HashMap<>();
+                        expenseCategoryMap.put("year", expenseCategoryYearSum.getYear());
+                        expenseCategoryMap.put("category", expenseCategoryYearSum.getCategory());
+                        expenseCategoryMap.put("amount", currencyFormatter.format(
+                                Optional.ofNullable(expenseCategoryYearSum.getSum()).orElse(0d).intValue()));
+                        return expenseCategoryMap;
+                    })
+                    .toList());
+
+            // format sum in INR format without decimal
+            response.put("thisYearTotalExpense", currencyFormatter.format(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
+                    .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
+                    .map(Double::intValue)
+                    .reduce(0, Integer::sum)));
+
+            response.put("previousYearTotalExpense", currencyFormatter.format(previousYearExpensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
+                    .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
+                    .map(Double::intValue)
+                    .reduce(0, Integer::sum)));
+
+        } catch (RuntimeException rte) {
+            rte.printStackTrace();
+            log.error("Failed to read expense details and parse, error: {}",  rte.getMessage());
+        }
+
+        return response;
+    }
+
     // URL: https://hdash.alok.digital/home/api/investment/all
     // Investments as on month
     // Return on Investments as on month

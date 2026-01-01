@@ -62,4 +62,22 @@ public class SchedulerConfig {
         thymeleafModel.put("name", "Alok");
         emailService.sendHtmlMessage("alok.ku.singh@gmail.com", "Investment Report - " + LocalDate.now(), "template-thymeleaf-investment-report.html", thymeleafModel);
     }
+
+    // Every 1st day of month at 9:00 AM
+    @Scheduled(cron = "0 0 9 1 * ?", zone = "Asia/Kolkata")
+    @SchedulerLock(name = "monthlyYearExpenseReport", lockAtLeastFor = "PT4M", lockAtMostFor = "PT14M")
+    void scheduleMonthlyYearExpenseReport() throws MessagingException {
+
+        int year = LocalDate.now().minusDays(15).getYear();
+
+        Map<String, Object> thymeleafModel = homeStackApiService.getYearlyExpenseReportDataForYear(year);
+
+        thymeleafModel.put("heading", "Yearly Expense Report for " + year + ".");
+
+        thymeleafModel.put("name", "Alok");
+        emailService.sendHtmlMessage("alok.ku.singh@gmail.com", "Year Report - " + year, "template-thymeleaf-yearly-expense-report.html", thymeleafModel);
+
+        thymeleafModel.put("name", "Rachna");
+        emailService.sendHtmlMessage("rachna2589@gmail.com", "Year Report - " + year, "template-thymeleaf-yearly-expense-report.html", thymeleafModel);
+    }
 }

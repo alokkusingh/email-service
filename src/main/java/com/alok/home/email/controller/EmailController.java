@@ -71,6 +71,21 @@ public class EmailController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/yearExpenseReport")
+    public ResponseEntity<Void> yearExpenseReport(@RequestBody() EmailRequest emailRequest) throws MessagingException {
+
+        int year = LocalDate.now().minusDays(15).getYear();
+
+        Map<String, Object> thymeleafModel = homeStackApiService.getYearlyExpenseReportDataForYear(year);
+
+        thymeleafModel.put("heading", "Yearly Expense Report for " + year + ".");
+
+        thymeleafModel.put("name", "Sir");
+        emailService.sendHtmlMessage(emailRequest.to(), "Yearly Report - " + year, "template-thymeleaf-yearly-expense-report.html", thymeleafModel);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/investmentReport")
     public ResponseEntity<Void> sendInvestmentReport(@RequestBody() EmailRequest emailRequest) throws MessagingException {
 
