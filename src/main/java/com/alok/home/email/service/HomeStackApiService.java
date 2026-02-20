@@ -50,10 +50,10 @@ public class HomeStackApiService {
                     .getBody();
             log.debug("ExpensesMonthSumByCategoryResponse: {}", expensesMonthSumByCategoryResponse);
 
-            LocalDate today = LocalDate.now();
+            YearMonth currentYearMonth = YearMonth.now();
             response.put("thisMonthSpendCategories", expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear()))
-                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(today.getMonth().getValue()))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(currentYearMonth.getYear()))
+                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(currentYearMonth.getMonth().getValue()))
                     .map(expenseCategoryMonthSum -> {
                         Map<String, Object> expenseCategoryMap = new HashMap<>();
                         expenseCategoryMap.put("category", expenseCategoryMonthSum.getCategory());
@@ -62,9 +62,10 @@ public class HomeStackApiService {
                     })
                     .toList());
 
+            YearMonth previousYearMonth = currentYearMonth.minusMonths(1);
             response.put("lastMonthSpendCategories", expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear()))
-                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(today.getMonth().getValue()-1))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(previousYearMonth.getYear()))
+                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(previousYearMonth.getMonth().getValue()))
                     .map(expenseCategoryMonthSum -> {
                         Map<String, Object> expenseCategoryMap = new HashMap<>();
                         expenseCategoryMap.put("category", expenseCategoryMonthSum.getCategory());
@@ -74,24 +75,24 @@ public class HomeStackApiService {
                     .toList());
 
             response.put("thisMonthTotalExpense", df.format(Math.round(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear()))
-                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(today.getMonth().getValue()))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(currentYearMonth.getYear()))
+                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(currentYearMonth.getMonth().getValue()))
                     .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
                     .reduce(0d, Double::sum))));
 
             response.put("previousMonthTotalExpense", df.format(Math.round(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear()))
-                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(today.getMonth().getValue()-1))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(previousYearMonth.getYear()))
+                    .filter(expenseCategoryMonthSum -> expenseCategoryMonthSum.getMonth().equals(previousYearMonth.getMonth().getValue()))
                     .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
                     .reduce(0d, Double::sum))));
 
             response.put("thisYearTotalExpense", df.format(Math.round(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear()))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(currentYearMonth.getYear()))
                     .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
                     .reduce(0d, Double::sum))));
 
             response.put("previousYearTotalExpense", df.format(Math.round(expensesMonthSumByCategoryResponse.getExpenseCategorySums().stream()
-                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(today.getYear() - 1))
+                    .filter(expenseCategorySum -> expenseCategorySum.getYear().equals(currentYearMonth.getYear() - 1))
                     .map(ExpensesMonthSumByCategoryResponse.ExpenseCategoryMonthSum::getSum)
                     .reduce(0d, Double::sum))));
 
@@ -100,6 +101,7 @@ public class HomeStackApiService {
                     .getBody();
             log.debug("ExpensesResponseAggByDay: {}", expensesResponseAggByDay);
 
+            LocalDate today = LocalDate.now();
             response.put("yesterdayExpense", df.format(Math.round(expensesResponseAggByDay.getExpenses().stream()
                     .filter(expenseAggByDay -> expenseAggByDay.getDate().equals(today.minusDays(1)))
                     .map(ExpensesResponseAggByDay.DayExpense::getAmount)

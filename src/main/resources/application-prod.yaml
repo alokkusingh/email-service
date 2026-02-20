@@ -30,9 +30,9 @@ auth:
         home-stack-auth: http://home-auth-service:8081/home/auth/home/token/validate
 
 home-api:
-  url: https://hdash.alok.digital/home/api
+  url: http://home-api-service.home-stack:8081/home/api
   token:
     issuer: home-stack-auth
-    url: https://hdash.alok.digital/home/auth/home/token/generate
+    url: http://home-auth-service:8081/home/auth/home/token/generate
     scope: home_api_rw
     audience: home-stack-api
