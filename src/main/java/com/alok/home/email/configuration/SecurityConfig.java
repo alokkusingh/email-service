@@ -23,6 +23,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(
+                                    "/v3/api-docs/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/index.html",
+                                    "/webjars/**"
+                            ).permitAll();
+
                     auth.requestMatchers("/actuator", "/actuator/**").permitAll();
 
                     auth.requestMatchers("/transactions", "/transactions/**").hasAnyRole("ADMIN", "USER", "home_api_ro", "home_api_rw", "LOCALHOST");

@@ -53,3 +53,12 @@ management:
       enabled: true
     readinessState:
       enabled: true
+
+springdoc:
+  api-docs:
+    enabled: true
+#    path: /api-docs
+  enable-javadoc: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
