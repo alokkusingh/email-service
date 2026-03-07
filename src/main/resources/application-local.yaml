@@ -39,3 +39,5 @@ home-api:
 
 server:
   port: 8081
+
+debug: true
