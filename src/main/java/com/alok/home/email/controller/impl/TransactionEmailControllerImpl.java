@@ -5,7 +5,6 @@ import com.alok.home.email.parser.dto.TransactionEmailDTO;
 import com.alok.home.email.service.TransactionEmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class TransactionEmailControllerImpl extends TransactionEmailController {
     }
 
     public ResponseEntity<List<TransactionEmailDTO>> getTransactions(
-            @RequestParam(value = "verified", defaultValue = "false") Boolean verified
+            Boolean verified
     ) {
         return ResponseEntity.ok()
                 .body(transactionEmailService.getTransactions(verified));
