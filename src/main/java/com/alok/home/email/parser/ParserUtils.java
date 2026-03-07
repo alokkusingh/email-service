@@ -46,7 +46,7 @@ public class ParserUtils {
 
     public static EmailTransactionType getTransactionType(String senderEmail, String subject) {
         return switch (senderEmail.toLowerCase()) {
-            case "alerts@hdfcbank.net" -> {
+            case "alerts@hdfcbank.net", "alerts@hdfcbank.bank.in" -> {
                 if (subject.equalsIgnoreCase("Alert :  Update on your HDFC Bank Credit Card") ||
                         subject.contains("debited via Credit Card **546")) {
                     yield EmailTransactionType.HDFC_CC_TRANS;
@@ -65,7 +65,7 @@ public class ParserUtils {
                     yield EmailTransactionType.UNKNOWN_TRANS;
                 }
             }
-            case "alerts@axisbank.com" -> {
+            case "alerts@axisbank.com", "alerts@axis.bank.in" -> {
                 if (subject.contains("Transaction alert on Axis Bank Credit Card")) {
                     yield EmailTransactionType.AXIS_CC_TRANS;
                 } else if (subject.contains("spent on credit card no. XX617")) {

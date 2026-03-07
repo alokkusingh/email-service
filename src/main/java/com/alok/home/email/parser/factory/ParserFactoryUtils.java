@@ -20,7 +20,7 @@ public class ParserFactoryUtils {
 
         public static EmailType getEmailType(final String emailId, final String subject) {
             return switch (emailId.toLowerCase()) {
-               case "alerts@hdfcbank.net", "onlinesbicard@sbicard.com", "alerts@axisbank.com" ->  EmailType.TRANSACTION;
+               case "alerts@hdfcbank.net", "alerts@hdfcbank.bank.in", "alerts@axis.bank.in", "onlinesbicard@sbicard.com", "alerts@axisbank.com" ->  EmailType.TRANSACTION;
                default -> EmailType.UNKNOWN;
             };
         }

@@ -35,6 +35,15 @@ class ParserUtilsTest {
     }
 
     @Test
+    void testHdfcSbTransUpiTxnV2() {
+        EmailTransactionType type = ParserUtils.getTransactionType(
+                "alerts@hdfcbank.bank.in",
+                "❗  You have done a UPI txn. Check details!"
+        );
+        assertEquals(EmailTransactionType.HDFC_SB_TRANS, type);
+    }
+
+    @Test
     void testHdfcSbTransAccountUpdate() {
         EmailTransactionType type = ParserUtils.getTransactionType(
                 "alerts@hdfcbank.net",
