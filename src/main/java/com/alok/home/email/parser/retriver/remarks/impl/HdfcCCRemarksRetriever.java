@@ -13,6 +13,7 @@ public class HdfcCCRemarksRetriever implements RemarksRetriever {
     private static final Pattern PATTERN = Pattern.compile("Thank you for using your HDFC Bank Credit Card ending .... for (.*). Authorization code");
     private static final Pattern PATTERN2 = Pattern.compile("Thank you for using HDFC Bank Card ...... for (.*) Authorization code");
     private static final Pattern PATTERN3 = Pattern.compile("Rs\\.\\d+\\.\\d+ is debited from your HDFC Bank Credit Card ending \\d+ towards (.*)\\. If you did not");
+    private static final Pattern PATTERN4 = Pattern.compile("Rs\\. \\d+\\.\\d+ has been debited from your HDFC Bank Credit Card ending \\d+ towards (.*)");
 
     @Override
     public String retrieve(String content) {
@@ -35,6 +36,13 @@ public class HdfcCCRemarksRetriever implements RemarksRetriever {
             return matcher.group(1);
         } else {
             log.warn("Pattern3 not found in the content.");
+        }
+
+        matcher = PATTERN4.matcher(content);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            log.warn("Pattern4 not found in the content.");
         }
 
         return "";

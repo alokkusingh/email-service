@@ -26,10 +26,19 @@ class ParserUtilsTest {
     }
 
     @Test
+    void testHdfcCcTransAPaymentMade() {
+        EmailTransactionType type = ParserUtils.getTransactionType(
+                "alerts@hdfcbank.bank.in",
+                "A payment was made using your Credit Card"
+        );
+        assertEquals(EmailTransactionType.HDFC_CC_TRANS, type);
+    }
+
+    @Test
     void testHdfcSbTransUpiTxn() {
         EmailTransactionType type = ParserUtils.getTransactionType(
                 "alerts@hdfcbank.net",
-                "You have done a UPI txn"
+                "You have done a UPI txn. Check details!"
         );
         assertEquals(EmailTransactionType.HDFC_SB_TRANS, type);
     }

@@ -41,6 +41,25 @@ public class HdfcCCAmountRetrieverTest {
     }
 
     @Test
+    void testRetrieveWithPattern4() {
+        String content = """
+                Dear Customer,
+                
+                          Greetings from HDFC Bank.
+                
+                          We would like to inform you that Rs. 5071.00 has been debited from your HDFC Bank Credit Card ending 5464 towards PYU*FLIPKART INTERNET on 17 May, 2026 at 16:33:56.
+                          To check your available balance, outstanding amount, or view recent transactions, you may use:
+                          Mycards:https://mycards.hdfc.bank.in
+                          WhatsApp Banking:https://hdfcbk.io/HDFCBK/K/DUvfZ20acT6
+                
+                          Important Note:
+                          If you did not authorise this transaction, please act immediately. Your safety is our top priority, and we are here to help.
+                """;
+        double result = retriever.retrieve(content);
+        assertEquals(5071, result);
+    }
+
+    @Test
     void testRetrieveWithNoPattern() {
         String content = "Some unrelated message";
         double result = retriever.retrieve(content);

@@ -13,6 +13,7 @@ public class HdfcSBRemarksRetriever implements RemarksRetriever {
     private static final Pattern PATTERN1 = Pattern.compile("Rs.(.*) Your UPI transaction reference");
     private static final Pattern PATTERN2 = Pattern.compile("Your (.*) and A/c xxxxxxx.... is credited");
     private static final Pattern PATTERN3 = Pattern.compile("Alert: (.*) from your Account XX.....");
+    private static final Pattern PATTERN4 = Pattern.compile("Rs\\.\\d+\\.\\d+ is debited from your account ending 0531 towards (.*) on");
 
     @Override
     public String retrieve(String content) {
@@ -21,7 +22,7 @@ public class HdfcSBRemarksRetriever implements RemarksRetriever {
             String substring = matcher.group(1);
             return substring;
         } else {
-            log.warn("Pattern not found in the content.");
+            log.warn("Pattern1 not found in the content.");
         }
 
         matcher = PATTERN2.matcher(content);
@@ -29,7 +30,7 @@ public class HdfcSBRemarksRetriever implements RemarksRetriever {
             String substring = matcher.group(1);
             return substring;
         } else {
-            log.warn("Pattern not found in the content.");
+            log.warn("Pattern2 not found in the content.");
         }
 
         matcher = PATTERN3.matcher(content);
@@ -37,7 +38,15 @@ public class HdfcSBRemarksRetriever implements RemarksRetriever {
             String substring = matcher.group(1);
             return substring;
         } else {
-            log.warn("Pattern not found in the content.");
+            log.warn("Pattern3 not found in the content.");
+        }
+
+        matcher = PATTERN4.matcher(content);
+        if (matcher.find()) {
+            String substring = matcher.group(1);
+            return substring;
+        } else {
+            log.warn("Pattern4 not found in the content.");
         }
 
         return "";

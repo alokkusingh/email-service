@@ -23,7 +23,7 @@ public final class TransactionParser implements Parser {
                     .email(senderEmail)
                     .bank(ParserUtils.getTransactionType(senderEmail, subject).name())
                     .amount(ParserUtils.getAmountRetriever(senderEmail, subject).retrieve(content))
-                    .description(ParserUtils.getRemarksRetriever(senderEmail, subject).retrieve(content))
+                    .description(ParserUtils.truncateString(ParserUtils.getRemarksRetriever(senderEmail, subject).retrieve(content), 255))
                     .timestamp(ParserUtils.getTransactionDateRetriever(senderEmail, subject).retrieve(content))
                     .build();
         } catch (Exception ex) {

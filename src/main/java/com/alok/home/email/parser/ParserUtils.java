@@ -48,18 +48,20 @@ public class ParserUtils {
         return switch (senderEmail.toLowerCase()) {
             case "alerts@hdfcbank.net", "alerts@hdfcbank.bank.in" -> {
                 if (subject.equalsIgnoreCase("Alert :  Update on your HDFC Bank Credit Card") ||
-                        subject.contains("debited via Credit Card **546")) {
+                        subject.contains("debited via Credit Card **546") ||
+                        subject.contains("A payment was made using your Credit Card")
+                ) {
                     yield EmailTransactionType.HDFC_CC_TRANS;
                 } else if (subject.contains("You have done a UPI txn") ||
                         subject.contains("View: Account update for your HDFC Bank") ||
-                        subject.equalsIgnoreCase("You have done a UPI txn. Check details!")) {
+                        subject.contains("You have done a UPI txn. Check details!")) {
                     yield EmailTransactionType.HDFC_SB_TRANS;
                 } else {
                     yield EmailTransactionType.UNKNOWN_TRANS;
                 }
             }
             case "onlinesbicard@sbicard.com" -> {
-                if (subject.equalsIgnoreCase("Transaction Alert from SBI Card")) {
+                if (subject.contains("Transaction Alert from SBI Card")) {
                     yield EmailTransactionType.SBI_CC_TRANS;
                 } else {
                     yield EmailTransactionType.UNKNOWN_TRANS;
@@ -82,5 +84,13 @@ public class ParserUtils {
         return ParserFactoryUtils.getEmailParserFactory(senderEmailAddress, subject)
                 .getParser()
                 .parseEmail(senderEmailAddress, subject, content);
+    }
+
+    public static String truncateString(String text, int length) {
+        if (text == null || text.length() <= length) {
+            return text;
+        } else {
+            return text.substring(0, length);
+        }
     }
 }

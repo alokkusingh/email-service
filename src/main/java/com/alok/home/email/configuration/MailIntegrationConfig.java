@@ -61,7 +61,7 @@ public class MailIntegrationConfig {
                     log.info("New message arrived: {}", message);
                     switch (message.getPayload()) {
                         case TransactionEmail email -> {
-                            log.info(email.toString());
+                            log.info("TransactionEmail: {}", email);
                             transactionEmailRepository.save(email);
                         }
                         case StatementEmail email -> log.info(email.toString());
